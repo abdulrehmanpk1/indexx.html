@@ -1,0 +1,22 @@
+---
+- name: Set static DNS on Ubuntu 22 servers,Forbmax
+  hosts: # Replace with your target hosts----
+  become: yes  
+
+  tasks:
+    - name: Configure Netplan for static DNS
+      netplan:
+        name: 01-netcfg.yaml  # Ensure this matches your Netplan config file name----
+        state: present
+        renderer: networkd
+        config:
+          network:
+            version: 2 # Ensure this matches your Netplan config file version----
+            ethernets:
+              eth0:  # Replace with your actual network interface name-----
+                nameservers:
+                  addresses:
+                    - 8.8.8.8  # Replace with your desired static DNS server IP----
+
+    - name: Apply Netplan configuration
+      command: netplan apply
